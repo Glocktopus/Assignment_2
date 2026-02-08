@@ -31,8 +31,12 @@ def sum_list(numbers):
     # TODO: Implement this function
     # Hint: if len(numbers) == 0, return 0
     # Otherwise, return numbers[0] + sum_list(numbers[1:])
-    
-    pass
+
+    if len(numbers) == 0:
+        return 0
+    else:
+        return numbers[0] + sum_list(numbers[1:])
+
 
 # Uncomment to test sum_list
 # print("\nTest sum_list:")
@@ -62,8 +66,13 @@ def count_even(numbers):
     # Hint: Base case is empty list (return 0)
     # If first number is even, add 1 to count from rest of list
     # If first number is odd, just return count from rest of list
-    
-    pass
+    if len(numbers) == 0:
+        return 0
+    elif numbers[0] % 2 == 0:
+        return 1 + count_even(numbers[1:])
+    else:
+        return count_even(numbers[1:])
+
 
 # Uncomment to test count_even
 # print("\nTest count_even:")
@@ -94,8 +103,13 @@ def find_strings_with(strings, target):
     # If first string contains target, add it to results from rest of list
     # Otherwise, just return results from rest of list
     # Use: if target in strings[0]
+    if len(strings) == 0:
+        return []
+    elif target in strings[0]:
+        return [strings[0]] + find_strings_with(strings[1:], target)
+    else:
+        return find_strings_with(strings[1:], target)
     
-    pass
 
 # Uncomment to test find_strings_with
 # print("\nTest find_strings_with:")
@@ -103,9 +117,9 @@ def find_strings_with(strings, target):
 # print(f"  find_strings_with(['hello', 'world', 'help', 'test'], 'hel') = {result}")
 # print(f"  (expected: ['hello', 'help'])")
     
-# result = find_strings_with(["cat", "dog", "bird"], "z")
-# print(f"  find_strings_with(['cat', 'dog', 'bird'], 'z') = {result}")
-# print(f"  (expected: [])")
+result = find_strings_with(["cat", "dog", "bird"], "z")
+print(f"  find_strings_with(['cat', 'dog', 'bird'], 'z') = {result}")
+print(f"  (expected: [])")
 
 # ============================================================================
 # PART 2: COUNT ALL FILES
@@ -137,8 +151,15 @@ def count_files(directory_path):
     # 2. How do you list items in a directory? (Check Resource 3)
     # 3. For each item, is it a file or directory? Recursively handle directories.
     # 4. How do you combine the results?
-    
-    pass
+    count = 0
+    dir_list = os.listdir(directory_path)
+    for file in dir_list:
+        if os.path.isdir(os.path.join(directory_path, file)):
+            count += count_files(os.path.join(directory_path, file))
+        elif os.path.isfile(os.path.join(directory_path, file)):
+            count += 1
+    return count
+
 
 
 # ============================================================================
@@ -173,8 +194,15 @@ def find_infected_files(directory_path, extension=".encrypted"):
     # 2. Recursive case: If it's a directory, check all items inside
     # 3. You'll need to build and return a list of matching file paths
     # 4. Use os.path.join() to create full paths
-    
-    pass
+    infected_files = []
+    dir_list = os.listdir(directory_path)
+    for file in dir_list:
+        from_content_root = os.path.join(directory_path, file)
+        if os.path.isdir(from_content_root):
+            infected_files += find_infected_files(os.path.join(directory_path, file),extension)
+        elif os.path.isfile(from_content_root) and from_content_root.endswith(extension):
+            infected_files += [from_content_root]
+    return infected_files
 
 
 # ============================================================================
@@ -192,7 +220,13 @@ if __name__ == "__main__":
     # print("Total files (Test Case 3):", count_files("test_cases/case3_infected")) # 5
 
     ## 2. Uncomment to run count_files for breached files
-    # print("Total files (breeched files):", count_files("breach_data")) # ???
+    # print("Total files (breeched files):", count_files("breach_data")) # 10074
+
+    ## 5. Determine how many files were in each department (Finance, HR, and Sales)
+    print("Total Files (Creative files):", count_files("breach_data/Creative")) # 1497
+    print("Total Files (HR files):", count_files("breach_data/HR")) #2368
+    print("Total Files (Marketing files):", count_files("breach_data/Marketing")) # 5482
+    print("Total Files (Operations files):", count_files("breach_data/Operations")) # 725
 
     ## 3. Uncomment to run tests for find_infected_files function
     # print("Total Infected Files (Test Case 1):", len(find_infected_files("test_cases/case1_flat"))) # 0
@@ -200,10 +234,14 @@ if __name__ == "__main__":
     # print("Total Infected Files (Test Case 3):", len(find_infected_files("test_cases/case3_infected"))) # 3
 
     ## 4. Uncomment to run find_infected breached files
-    # print("Total Infected Files (breached files):", len(find_infected_files("breach_data"))) # ???
+    # print("Total Infected Files (breached files):", len(find_infected_files("breach_data"))) # 3050
 
     ## 5. Determine how many files were corrupted by department (Finance, HR, and Sales)
-    
+    # print("Total Infected Files (Creative files):", len(find_infected_files("breach_data/Creative"))) # 432
+    # print("Total Infected Files (HR files):", len(find_infected_files("breach_data/HR"))) #731
+    # print("Total Infected Files (Marketing files):", len(find_infected_files("breach_data/Marketing"))) # 1665
+    # print("Total Infected Files (Operations files):", len(find_infected_files("breach_data/Operations"))) # 222
+
 
 
     
